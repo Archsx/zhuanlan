@@ -1,9 +1,5 @@
 <template>
-  <li
-    class="dropdown-option"
-    :class="{ 'is-disabled': disabled }"
-    @click="handle"
-  >
+  <li class="dropdown-option" :class="{ 'is-disabled': disabled }">
     <slot></slot>
   </li>
 </template>
@@ -21,12 +17,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const handle = () => {
-      console.log('aa')
-    }
-    return {
-      handle
-    }
+    return {}
   }
 })
 </script>
