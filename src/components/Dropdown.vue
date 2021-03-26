@@ -18,9 +18,7 @@
       v-show="isOpen"
       style="width:100%"
     >
-      <li><a class="dropdown-item" href="#">Action</a></li>
-      <li><a class="dropdown-item" href="#">Another action</a></li>
-      <li><a class="dropdown-item text-truncate" href="#">Something else here</a></li>
+      <slot></slot>
     </ul>
   </div>
 </template>

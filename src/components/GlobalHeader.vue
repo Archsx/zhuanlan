@@ -28,7 +28,17 @@
             >
           </li>
         </ul> -->
-        <Dropdown :title="`你好 ${user.name}`"></Dropdown>
+        <Dropdown :title="`你好 ${user.name}`">
+          <dropdown-item >
+            <a class="dropdown-item text-truncate" href="#">Action</a>
+          </dropdown-item>
+          <dropdown-item >
+            <a class="dropdown-item text-truncate" href="#">Another Action</a>
+          </dropdown-item>
+          <dropdown-item disabled>
+            <a class="dropdown-item text-truncate" href="#">Something else here</a>
+          </dropdown-item>
+        </Dropdown>
       </div>
       <div v-else>
         <button class="btn btn-primary me-3" type="submit">注册</button>
@@ -42,9 +52,10 @@
 import { defineComponent, PropType, ref } from 'vue'
 import { UserProps } from '@/types/global-header'
 import Dropdown from './Dropdown.vue'
+import DropdownItem from './DropdownItem.vue'
 export default defineComponent({
   name: 'GlobalHeader',
-  components: { Dropdown },
+  components: { Dropdown, DropdownItem },
   props: {
     user: {
       type: Object as PropType<UserProps>,
@@ -64,8 +75,8 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
-.show {
-  display: block !important;
-}
+<style lang="scss">
+// .show {
+//   display: block !important;
+// }
 </style>
