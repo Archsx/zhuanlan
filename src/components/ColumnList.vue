@@ -1,16 +1,27 @@
 <template>
   <div class="row">
-    <div v-for="column in list" :key="column.id" class="col-4">
-      <img :src="column.avatar" :alt="column.title" />
-      <h5>{{ column.title }}</h5>
-      <p>{{ column.description }}</p>
-      <a href="#">进入专栏</a>
+    <div v-for="column in columnList" :key="column.id" class="col-4 mb-3">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body text-center">
+          <img
+            :src="column.avatar"
+            class="rounded-circle border border-light my-3"
+            alt=""
+            style="width:5rem;height:5rem"
+          />
+          <h5 class="card-title">{{ column.title }}</h5>
+          <p class="card-text text-start">
+            {{ column.description }}
+          </p>
+          <a href="#" class="btn btn-outline-primary"> 进入专栏</a>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { computed, defineComponent, PropType } from 'vue'
 import { ColumnProps } from '../types/column-list'
 export default defineComponent({
   name: 'ColumnList',
@@ -22,7 +33,17 @@ export default defineComponent({
     }
   },
   setup(props) {
-    return {}
+    const columnList = computed(() => {
+      return props.list.map(item => {
+        if (!item.avatar) {
+          item.avatar = require('@/assets/column.jpg')
+        }
+        return item
+      })
+    })
+    return {
+      columnList
+    }
   }
 })
 </script>

@@ -25,8 +25,8 @@ const testData: Array<ColumnProps> = [
   {
     id: 3,
     title: 'test3专栏',
-    description: '这是test3专栏的简介',
-    avatar: 'https://i.loli.net/2021/03/25/OxNmBTtkbHYyG3o.jpg'
+    description: '这是test3专栏的简介'
+    // avatar: 'https://i.loli.net/2021/03/25/OxNmBTtkbHYyG3o.jpg'
   },
   {
     id: 4,
