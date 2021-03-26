@@ -4,7 +4,32 @@
       <span class="navbar-brand mb-0 h1">专栏</span>
     </div>
     <div>
-      <div v-if="user.isLogin">你好 {{ user.name }}</div>
+      <div v-if="user.isLogin" style="position:relative;width:10rem">
+        <!-- <button
+          type="button"
+          class="btn btn-primary dropdown-toggle text-truncate"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          @click="toggle"
+          style="width:100%"
+        >
+          你好 {{ user.name }}
+        </button>
+        <ul
+          :class="['dropdown-menu', spread ? 'show' : '']"
+          aria-labelledby="dropdownMenuLink"
+          style="width:100%"
+        >
+          <li><a class="dropdown-item" href="#">Action</a></li>
+          <li><a class="dropdown-item" href="#">Another action</a></li>
+          <li>
+            <a class="dropdown-item text-truncate" href="#"
+              >Something else here</a
+            >
+          </li>
+        </ul> -->
+        <Dropdown :title="`你好 ${user.name}`"></Dropdown>
+      </div>
       <div v-else>
         <button class="btn btn-primary me-3" type="submit">注册</button>
         <button type="button" class="btn btn-outline-primary">登录</button>
@@ -14,11 +39,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref } from 'vue'
 import { UserProps } from '@/types/global-header'
+import Dropdown from './Dropdown.vue'
 export default defineComponent({
   name: 'GlobalHeader',
-  components: {},
+  components: { Dropdown },
   props: {
     user: {
       type: Object as PropType<UserProps>,
@@ -26,9 +52,20 @@ export default defineComponent({
     }
   },
   setup(props) {
-    return {}
+    const spread = ref(false)
+    const toggle = () => {
+      spread.value = !spread.value
+    }
+    return {
+      spread,
+      toggle
+    }
   }
 })
 </script>
 
-<style lang="" scoped></style>
+<style lang="scss" scoped>
+.show {
+  display: block !important;
+}
+</style>

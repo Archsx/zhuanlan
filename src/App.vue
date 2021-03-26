@@ -13,7 +13,8 @@ export default defineComponent({
   components: { GlobalHeader },
   setup() {
     const testUser: UserProps = {
-      isLogin: false
+      isLogin: true,
+      name: 'zoidberg'
     }
     return {
       testUser
@@ -22,4 +23,9 @@ export default defineComponent({
 })
 </script>
 
-<style lang="" scoped></style>
+<style lang="scss">
+  .btn{
+    box-shadow: none  !important;
+  }
+
+</style>
