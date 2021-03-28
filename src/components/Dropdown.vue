@@ -24,7 +24,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, ref } from 'vue'
+import { defineComponent, onMounted, onUnmounted, ref, watch } from 'vue'
+import useClickOutside from '../hooks/useClickOutside'
 
 export default defineComponent({
   name: 'Dropdown',
@@ -43,23 +44,29 @@ export default defineComponent({
     const toggleOpen = () => {
       isOpen.value = !isOpen.value
     }
-    const handler = (e: MouseEvent) => {
-      // 这里是TS的类型保护
-      if (dropdownRef.value) {
-        // console.log(dropdownRef.value)
-        if (
-          !dropdownRef.value.contains(e.target as HTMLElement) &&
-          isOpen.value
-        ) {
-          isOpen.value = false
-        }
+    // const handler = (e: MouseEvent) => {
+    //   // 这里是TS的类型保护
+    //   if (dropdownRef.value) {
+    //     // console.log(dropdownRef.value)
+    //     if (
+    //       !dropdownRef.value.contains(e.target as HTMLElement) &&
+    //       isOpen.value
+    //     ) {
+    //       isOpen.value = false
+    //     }
+    //   }
+    // }
+    // onMounted(() => {
+    //   document.addEventListener('click', handler)
+    // })
+    // onUnmounted(() => {
+    //   document.removeEventListener('click', handler)
+    // })
+    const isClickOutside = useClickOutside(dropdownRef)
+    watch(isClickOutside, newVal => {
+      if (newVal && isOpen.value) {
+        isOpen.value = false
       }
-    }
-    onMounted(() => {
-      document.addEventListener('click', handler)
-    })
-    onUnmounted(() => {
-      document.removeEventListener('click', handler)
     })
     return {
       isOpen,
