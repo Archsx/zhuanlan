@@ -29,14 +29,16 @@
           </li>
         </ul> -->
         <Dropdown :title="`你好 ${user.name}`">
-          <dropdown-item >
+          <dropdown-item>
             <a class="dropdown-item text-truncate" href="#">Action</a>
           </dropdown-item>
-          <dropdown-item >
+          <dropdown-item>
             <a class="dropdown-item text-truncate" href="#">Another Action</a>
           </dropdown-item>
           <dropdown-item disabled>
-            <a class="dropdown-item text-truncate" href="#">Something else here</a>
+            <a class="dropdown-item text-truncate" href="#"
+              >Something else here</a
+            >
           </dropdown-item>
         </Dropdown>
       </div>
@@ -63,13 +65,13 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const spread = ref(false)
-    const toggle = () => {
-      spread.value = !spread.value
-    }
+    // const spread = ref(false)
+    // const toggle = () => {
+    //   spread.value = !spread.value
+    // }
     return {
-      spread,
-      toggle
+      // spread,
+      // toggle
     }
   }
 })
