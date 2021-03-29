@@ -4,7 +4,8 @@ import { UserProps } from './types/global-header'
 export default defineComponent({
   setup() {
     const testUser: UserProps = {
-      isLogin: false
+      isLogin: true,
+      name: 'Archer'
     }
     return () => {
       return (
