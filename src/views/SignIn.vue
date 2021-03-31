@@ -3,29 +3,18 @@
     <div class="signContent">
       <div class="signFormWrapper">
         <form>
-          <div class="mb-3">
+          <div class="mb-2">
             <label for="exampleInputEmail" class="form-label">邮箱地址</label>
-            <input
-              type="email"
-              class="form-control"
-              id="exampleInputEmail"
-              aria-describedby="emailHelp"
-              v-model="emailRef.val"
-              @blur="validateEmail"
-            />
-            <div id="emailError" v-if="emailRef.error" class="form-text">
-              {{ emailRef.message }}
-            </div>
+            <validate-input :rules="emailRule"></validate-input>
           </div>
-          <div class="mb-3">
+          <div class="mb-2">
             <label for="exampleInputPassword" class="form-label">密码</label>
-            <input
+            <validate-input
+              :rules="passwordRule"
               type="password"
-              class="form-control"
-              id="exampleInputPassword"
-            />
+            ></validate-input>
           </div>
-          <div class="mb-3 form-check">
+          <!-- <div class="mb-3 form-check">
             <input
               type="checkbox"
               class="form-check-input"
@@ -34,7 +23,7 @@
             <label class="form-check-label" for="exampleCheck1"
               >Check me out</label
             >
-          </div>
+          </div> -->
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
       </div>
@@ -47,32 +36,38 @@
 </template>
 
 <script lang="ts">
-import { isValidEmail } from '@/utils/validate'
 import { defineComponent, reactive } from 'vue'
-
+import ValidateInput from '@/components/ValidateInput.vue'
+import { RuleProps } from '@/utils/validate'
 export default defineComponent({
   name: 'SignIn',
-  components: {},
+  components: {
+    ValidateInput
+  },
   setup(props) {
-    const emailRef = reactive({
-      val: '',
-      error: false,
-      message: ''
-    })
-    const validateEmail = () => {
-      if (!emailRef.val.trim()) {
-        emailRef.error = true
-        emailRef.message = '邮箱不能为空'
-        return
+    const emailRule: RuleProps = [
+      {
+        type: 'required',
+        message: '邮箱地址不能为空'
+      },
+      {
+        type: 'email',
+        message: '请输入合法的邮箱地址'
       }
-      if (!isValidEmail(emailRef.val)) {
-        emailRef.error = true
-        emailRef.message = '请输入合法的邮箱地址'
+    ]
+    const passwordRule: RuleProps = [
+      {
+        type: 'required',
+        message: '密码不能为空'
+      },
+      {
+        type: 'password',
+        message: '请输入长度至少为8位并且包含数字和字母的密码'
       }
-    }
+    ]
     return {
-      emailRef,
-      validateEmail
+      emailRule,
+      passwordRule
     }
   }
 })
