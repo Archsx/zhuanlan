@@ -1,12 +1,12 @@
 <template>
   <div class="validate-input-container pb-3">
     <input
-      :type="type"
       class="form-control"
       :value="inputRef.val"
       @input="handleInput"
       @blur="validateInput"
       :class="{ 'is-invalid': inputRef.error }"
+      v-bind="$attrs"
     />
     <span v-if="inputRef.error" class="invalid-feedback">
       {{ inputRef.message }}
@@ -21,20 +21,22 @@ import { defineComponent, PropType, reactive } from 'vue'
 export default defineComponent({
   name: '',
   components: {},
+  // 设置这个属性可以使根元素不直接添加attributes,这样可以不再使用下面的type这个prop
+  inheritAttrs: false,
   props: {
     rules: {
       type: Array as PropType<RuleProps>
     },
-    type: {
-      type: String,
-      default: 'text'
-    },
+    // type: {
+    //   type: String,
+    //   default: 'text'
+    // },
     modelValue: {
       type: String
     }
   },
   emits: ['update:modelValue'],
-  setup(props, { emit }) {
+  setup(props, { emit, attrs }) {
     const inputRef = reactive({
       val: props.modelValue || '',
       error: false,
