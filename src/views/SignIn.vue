@@ -2,15 +2,18 @@
   <div class="signPage">
     <div class="signContent">
       <div class="signFormWrapper">
+        {{ password }}
+        {{ email }}
         <form>
           <div class="mb-2">
             <label for="exampleInputEmail" class="form-label">邮箱地址</label>
-            <validate-input :rules="emailRule"></validate-input>
+            <validate-input :rules="emailRule" v-model="email"></validate-input>
           </div>
           <div class="mb-2">
             <label for="exampleInputPassword" class="form-label">密码</label>
             <validate-input
               :rules="passwordRule"
+              v-model="password"
               type="password"
             ></validate-input>
           </div>
@@ -36,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { defineComponent, reactive, ref } from 'vue'
 import ValidateInput from '@/components/ValidateInput.vue'
 import { RuleProps } from '@/utils/validate'
 export default defineComponent({
@@ -65,9 +68,13 @@ export default defineComponent({
         message: '请输入长度至少为8位并且包含数字和字母的密码'
       }
     ]
+    const email = ref('')
+    const password = ref('')
     return {
       emailRule,
-      passwordRule
+      passwordRule,
+      email,
+      password
     }
   }
 })

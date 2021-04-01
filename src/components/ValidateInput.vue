@@ -3,7 +3,8 @@
     <input
       :type="type"
       class="form-control"
-      v-model="inputRef.val"
+      :value="inputRef.val"
+      @input="handleInput"
       @blur="validateInput"
       :class="{ 'is-invalid': inputRef.error }"
     />
@@ -27,11 +28,15 @@ export default defineComponent({
     type: {
       type: String,
       default: 'text'
+    },
+    modelValue: {
+      type: String
     }
   },
-  setup(props) {
+  emits: ['update:modelValue'],
+  setup(props, { emit }) {
     const inputRef = reactive({
-      val: '',
+      val: props.modelValue || '',
       error: false,
       message: ''
     })
@@ -50,9 +55,14 @@ export default defineComponent({
         inputRef.message = ''
       }
     }
+    const handleInput = (e: InputEvent) => {
+      inputRef.val = (e.target as HTMLInputElement).value
+      emit('update:modelValue', inputRef.val)
+    }
     return {
       inputRef,
-      validateInput
+      validateInput,
+      handleInput
     }
   }
 })
