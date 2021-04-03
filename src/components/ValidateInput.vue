@@ -50,12 +50,13 @@ export default defineComponent({
           if (!Validation[rule.type](inputRef.val)) {
             inputRef.error = true
             inputRef.message = rule.message
-            return
+            return false
           }
         }
         inputRef.error = false
         inputRef.message = ''
       }
+      return true
     }
     const handleInput = (e: InputEvent) => {
       inputRef.val = (e.target as HTMLInputElement).value

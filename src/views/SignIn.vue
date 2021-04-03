@@ -10,6 +10,7 @@
               placeholder="请输入邮箱地址"
               :rules="emailRule"
               v-model="email"
+              ref="inputRef"
             ></validate-input>
           </div>
           <div class="mb-2">
@@ -68,15 +69,18 @@ export default defineComponent({
     ]
     const email = ref('')
     const password = ref('')
+    const inputRef = ref<any>()
     const onFormSubmit = (result: boolean) => {
-      console.log(result)
+      console.log(inputRef.value)
+      console.log(inputRef.value.validateInput())
     }
     return {
       emailRule,
       passwordRule,
       email,
       password,
-      onFormSubmit
+      onFormSubmit,
+      inputRef
     }
   }
 })
