@@ -16,7 +16,8 @@
 
 <script lang="ts">
 import { RuleProps, Validation } from '@/utils/validate'
-import { defineComponent, PropType, reactive } from 'vue'
+import { defineComponent, onMounted, PropType, reactive } from 'vue'
+import { mitter } from './ValidateForm.vue'
 
 export default defineComponent({
   name: '',
@@ -62,6 +63,9 @@ export default defineComponent({
       inputRef.val = (e.target as HTMLInputElement).value
       emit('update:modelValue', inputRef.val)
     }
+    onMounted(() => {
+      mitter.emit('form-item-created', inputRef.val)
+    })
     return {
       inputRef,
       validateInput,

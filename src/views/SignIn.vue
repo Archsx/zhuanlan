@@ -67,8 +67,8 @@ export default defineComponent({
         message: '请输入长度至少为8位并且包含数字和字母的密码'
       }
     ]
-    const email = ref('')
-    const password = ref('')
+    const email = ref('asdf@qq.com')
+    const password = ref('1234qwer')
     const inputRef = ref<any>()
     const onFormSubmit = (result: boolean) => {
       console.log(inputRef.value)
