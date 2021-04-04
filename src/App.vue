@@ -1,5 +1,7 @@
 <template>
-  <router-view></router-view>
+  <div class="wrapper">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script lang="ts">
@@ -19,5 +21,10 @@ export default defineComponent({
 }
 .form-control:focus {
   box-shadow: none !important;
+}
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 </style>
