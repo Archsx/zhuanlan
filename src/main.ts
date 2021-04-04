@@ -2,8 +2,9 @@ import { createApp } from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import './css/reset.scss'
+import './css/custom.scss'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import '@/css/bootstrap-reset.scss'
 
 createApp(App)
   .use(store)

@@ -27,7 +27,7 @@ export default defineComponent({
         <div
           class="dropdown"
           style="position:relative;width:10rem"
-          // 注意这里不能写作ref="dropdownRef" 
+          // 注意这里不能写作ref="dropdownRef"
           ref={dropdownRef}
         >
           <button
