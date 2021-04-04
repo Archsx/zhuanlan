@@ -10,7 +10,6 @@
               placeholder="请输入邮箱地址"
               :rules="emailRule"
               v-model="email"
-              ref="inputRef"
             ></validate-input>
           </div>
           <div class="mb-2">
@@ -46,7 +45,7 @@ export default defineComponent({
     ValidateInput,
     ValidateForm
   },
-  setup(props) {
+  setup() {
     const emailRule: RuleProps = [
       {
         type: 'required',
@@ -67,20 +66,21 @@ export default defineComponent({
         message: '请输入长度至少为8位并且包含数字和字母的密码'
       }
     ]
-    const email = ref('asdf@qq.com')
-    const password = ref('1234qwer')
-    const inputRef = ref<any>()
+    const email = ref('')
+    const password = ref('')
+    // 可以使用ref的形式获取组件实例
+    // const inputRef = ref<any>()
+    // console.log(inputRef.value)
+    // console.log(inputRef.value.validateInput())
     const onFormSubmit = (result: boolean) => {
-      console.log(inputRef.value)
-      console.log(inputRef.value.validateInput())
+      console.log(result)
     }
     return {
       emailRule,
       passwordRule,
       email,
       password,
-      onFormSubmit,
-      inputRef
+      onFormSubmit
     }
   }
 })
