@@ -5,6 +5,23 @@
   box-shadow: none !important;
 }
 
+.validate-input-container {
+  position: relative;
+  .invalid-feedback {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 12px;
+    color: red;
+  }
+}
+
+.dropdown-option.is-disabled {
+  color: #6c757d;
+  pointer-events: none;
+  background-color: transparent;
+}
 
 .signPage {
   display: flex;

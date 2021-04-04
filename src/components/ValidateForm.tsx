@@ -4,8 +4,12 @@ import { withModifiers } from '@vue/runtime-dom'
 type ValidateFunc = () => boolean
 export default defineComponent({
   name: 'ValidateForm',
-  // emits: ['form-submit'],
   props: {
+    // 这是我觉得最恶心的地方
+    // 对于自定义事件 父组件如果要设置对应的处理的函数
+    // 需要在子组件的props里面设置这个属性
+    // 详情(其实也不是完全相关)见:
+    // https://github.com/vuejs/jsx-next/issues/266
     onFormSubmit: {
       type: Function as PropType<(param: boolean) => void>
     }
@@ -17,7 +21,6 @@ export default defineComponent({
     const submitForm = () => {
       const result = funcArr.map(func => func()).every(res => res)
       emit('FormSubmit', result)
-      // emit('form-submit', result)
     }
     const callback = (func?: ValidateFunc) => {
       funcArr.push(func!)
