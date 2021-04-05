@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-light bg-light d-flex justify-content-between p-3">
     <div>
-      <span class="navbar-brand mb-0 h1">专栏</span>
+      <router-link to="/" class="navbar-brand mb-0 h1">专栏</router-link>
     </div>
     <div>
       <div v-if="user.isLogin" style="position:relative;width:10rem">
@@ -43,8 +43,12 @@
         </Dropdown>
       </div>
       <div v-else>
-        <button class="btn btn-primary me-3" type="submit">注册</button>
-        <button type="button" class="btn btn-outline-primary">登录</button>
+        <router-link to="/signin" class="btn btn-primary me-3" type="submit"
+          >注册</router-link
+        >
+        <router-link to="/signin" type="button" class="btn btn-outline-primary"
+          >登录</router-link
+        >
       </div>
     </div>
   </nav>

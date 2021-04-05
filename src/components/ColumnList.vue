@@ -33,7 +33,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    // 注意这里对于props数据的改造
+    // 注意这里使用computed对于props数据的处理
     const columnList = computed(() => {
       return props.list.map(item => {
         if (!item.avatar) {
