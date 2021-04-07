@@ -35,10 +35,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import ValidateInput from '@/components/ValidateInput.vue'
 import ValidateForm from '@/components/ValidateForm.vue'
 import { RuleProps } from '@/utils/validate'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '@/store'
+
 export default defineComponent({
   name: 'SignIn',
   components: {
@@ -46,6 +50,7 @@ export default defineComponent({
     ValidateForm
   },
   setup() {
+    const router = useRouter()
     const emailRule: RuleProps = [
       {
         type: 'required',
@@ -68,12 +73,22 @@ export default defineComponent({
     ]
     const email = ref('')
     const password = ref('')
+    const store = useStore<GlobalDataProps>()
     // 可以使用ref的形式获取组件实例
     // const inputRef = ref<any>()
     // console.log(inputRef.value)
     // console.log(inputRef.value.validateInput())
     const onFormSubmit = (result: boolean) => {
-      console.log(result)
+      if (result) {
+        // 使用store.commit来调用mutations里面的方法
+        // 需要注意的是 只有state里面的数据有代码提示 
+        // 而这些comit的事件名是没有提示的
+        // 不知道哪个版本的vuex能添加支持
+        store.commit('login')
+        router.push({
+          name: 'Index'
+        })
+      }
     }
     return {
       emailRule,
