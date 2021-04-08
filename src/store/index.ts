@@ -37,7 +37,7 @@ const store = createStore<GlobalDataProps>({
     columns: testData,
     posts: testPosts,
     user: {
-      isLogin: false
+      isLogin: true
     }
   },
   mutations: {

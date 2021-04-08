@@ -30,15 +30,17 @@
         </ul> -->
         <Dropdown :title="`你好 ${user.name}`">
           <dropdown-item>
-            <a class="dropdown-item text-truncate" href="#">Action</a>
+            <router-link
+              class="dropdown-item text-truncate"
+              :to="{ name: 'CreatePost' }"
+              >新建文章</router-link
+            >
           </dropdown-item>
           <dropdown-item>
-            <a class="dropdown-item text-truncate" href="#">Another Action</a>
+            <a class="dropdown-item text-truncate" href="#">编辑资料</a>
           </dropdown-item>
           <dropdown-item disabled>
-            <a class="dropdown-item text-truncate" href="#"
-              >Something else here</a
-            >
+            <a class="dropdown-item text-truncate" href="#">退出登录</a>
           </dropdown-item>
         </Dropdown>
       </div>

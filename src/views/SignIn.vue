@@ -81,7 +81,7 @@ export default defineComponent({
     const onFormSubmit = (result: boolean) => {
       if (result) {
         // 使用store.commit来调用mutations里面的方法
-        // 需要注意的是 只有state里面的数据有代码提示 
+        // 需要注意的是 只有state里面的数据有代码提示
         // 而这些comit的事件名是没有提示的
         // 不知道哪个版本的vuex能添加支持
         store.commit('login')
