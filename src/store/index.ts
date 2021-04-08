@@ -49,6 +49,25 @@ const store = createStore<GlobalDataProps>({
         name: 'viking'
       }
     }
+  },
+  getters: {
+    // 组件在使用的时候是这样用的 const xxx = computed(()=>store.getters.biggerColumnLen)
+    // 但是这时没有代码提示
+    // biggerColumnLen(state) {
+    //   return state.columns.filter(c => c.id > 2).length
+    // }
+
+    // 假如getters需要参数 那么此时返回的就是一个函数
+    getColumnById(state) {
+      return (id: number) => {
+        return state.columns.find(c => c.id === id)
+      }
+    },
+    getPostsByCid(state) {
+      return (cid: number) => {
+        return state.posts.filter(p => p.columnId === cid)
+      }
+    }
   }
 })
 
