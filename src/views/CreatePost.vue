@@ -8,16 +8,18 @@
           :rules="titleRules"
           v-model="titleVal"
           placeholder="请输入文章标题"
-          type="text"
+          :tag="'input'"
         ></validate-input>
       </div>
       <div class="mb-3">
         <label for="" class="form-label">文章详情: </label>
         <validate-input
-          type="password"
+          type="text"
+          rows="10"
           placeholder="请输入文章内容"
           :rules="contentRules"
           v-model="contentVal"
+          tag="textarea"
         >
         </validate-input>
       </div>

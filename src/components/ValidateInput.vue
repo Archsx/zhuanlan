@@ -1,13 +1,14 @@
 <template>
   <div class="validate-input-container pb-3">
-    <input
+    <component
       class="form-control"
       :value="inputRef.val"
       @input="handleInput"
       @blur="validateInput"
       :class="{ 'is-invalid': inputRef.error }"
       v-bind="$attrs"
-    />
+      :is="tag === 'input' ? 'input' : 'textarea'"
+    ></component>
     <span v-if="inputRef.error" class="invalid-feedback">
       {{ inputRef.message }}
     </span>
@@ -18,6 +19,7 @@
 import { RuleProps, Validation } from '@/utils/validate'
 import { defineComponent, onMounted, PropType, reactive } from 'vue'
 import { mitter } from './ValidateForm.vue'
+export type InputOrText = 'input' | 'textarea'
 
 export default defineComponent({
   name: '',
@@ -34,6 +36,10 @@ export default defineComponent({
     // },
     modelValue: {
       type: String
+    },
+    tag: {
+      type: String as PropType<InputOrText>,
+      default: 'input'
     }
   },
   emits: ['update:modelValue'],
