@@ -44,7 +44,7 @@ const store = createStore<GlobalDataProps>({
     login(state) {
       state.user = {
         ...state.user,
-        isLogin: true,
+        isLogin: false,
         name: 'viking'
       }
     },
