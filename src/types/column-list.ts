@@ -1,6 +1,12 @@
 export interface ColumnProps {
-  id: number
+  _id: string
   title: string
-  avatar?: string
+  avatar?: ImageProps
   description: string
+}
+
+export interface ImageProps {
+  _id?: string
+  url?: string
+  createdAt?: string
 }

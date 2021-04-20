@@ -1,8 +1,11 @@
+import { ImageProps } from './column-list'
+
 export interface IPostProps {
-  id: number
+  _id: string
   title: string
-  content: string
-  image?: string
+  excerpt?: string
+  content?: string
+  image?: ImageProps
   createdAt: string
-  columnId: string
+  column: string
 }

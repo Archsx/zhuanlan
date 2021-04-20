@@ -38,7 +38,7 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import store, { GlobalDataProps } from '@/store'
 import { RuleProps } from '@/utils/validate'
-import { PostProps } from '@/testData'
+import { IPostProps } from '@/types/column-detail'
 
 export default defineComponent({
   name: 'CreatePost',
@@ -64,11 +64,11 @@ export default defineComponent({
       if (result) {
         const { columnId } = store.state.user
         if (columnId) {
-          const newPost: PostProps = {
-            id: new Date().getTime(),
+          const newPost: IPostProps = {
+            _id: new Date().getTime() + '',
             title: titleVal.value,
             content: contentVal.value,
-            columnId,
+            column: columnId,
             createdAt: new Date().toLocaleString()
           }
           store.commit('createPost', newPost)

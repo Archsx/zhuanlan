@@ -26,7 +26,7 @@
 // 另外, 假如ColumnList组件的数据可以自己去发送请求来获取的话 我觉得这个组件没有存在的意义
 import { GlobalDataProps } from '@/store'
 import { useStore } from 'vuex'
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, onMounted } from 'vue'
 import ColumnList from './ColumnList.vue'
 
 export default defineComponent({
@@ -36,6 +36,10 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore<GlobalDataProps>()
+    // 注意这里在mouted这个钩子函数里面dispatch想要的action
+    onMounted(() => {
+      store.dispatch('fetchColumns')
+    })
     // 注意这里用computed来获取vuex里面的数据
     const list = computed(() => {
       return store.state.columns

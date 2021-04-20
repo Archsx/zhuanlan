@@ -1,7 +1,13 @@
-import { PostProps, testData, testPosts } from '@/testData'
+import {
+  getAndCommit,
+  getColumn,
+  getColumns,
+  getPosts
+} from '@/service/columns'
+import { IPostProps } from '@/types/column-detail'
 import { ColumnProps } from '@/types/column-list'
 import { UserProps } from '@/types/global-header'
-import { createStore } from 'vuex'
+import { Commit, createStore } from 'vuex'
 
 // const store = createStore({
 //   state: {
@@ -21,8 +27,9 @@ import { createStore } from 'vuex'
 
 export interface GlobalDataProps {
   columns: ColumnProps[]
-  posts: PostProps[]
+  posts: IPostProps[]
   user: UserProps
+  loading: boolean
 }
 // 请注意下面这个GlobalDataProps
 // 这个东西需要多次使用
@@ -31,12 +38,27 @@ export interface GlobalDataProps {
 // 方便ts的代码提示
 const store = createStore<GlobalDataProps>({
   state: {
-    columns: testData,
-    posts: testPosts,
+    columns: [],
+    posts: [],
     user: {
       isLogin: true,
       name: 'me',
-      columnId: 1
+      columnId: '1'
+    },
+    loading: false
+  },
+  actions: {
+    fetchColumns(context) {
+      getAndCommit('/columns', 'fetchColumns', context.commit)
+    },
+    async fetchColumn({ commit }, cid) {
+      const { data } = await getColumn(cid)
+      commit('fetchColumn', data)
+    },
+    fetchPosts({ commit }, cid) {
+      getPosts(cid).then(res => {
+        commit('fetchPosts', res.data)
+      })
     }
   },
   mutations: {
@@ -48,8 +70,20 @@ const store = createStore<GlobalDataProps>({
         name: 'viking'
       }
     },
+    setLoading(state, status: boolean) {
+      state.loading = status
+    },
+    fetchColumns(state, rawData) {
+      state.columns = rawData.data.list
+    },
     createPost(state, newPost) {
       state.posts.push(newPost)
+    },
+    fetchPosts(state, rawData) {
+      state.posts = rawData.data.list
+    },
+    fetchColumn(state, rawData) {
+      state.columns = [rawData.data]
     }
   },
   getters: {
@@ -61,13 +95,13 @@ const store = createStore<GlobalDataProps>({
 
     // 假如getters需要参数 那么此时返回的就是一个函数
     getColumnById(state) {
-      return (id: number) => {
-        return state.columns.find(c => c.id === id)
+      return (id: string) => {
+        return state.columns.find(c => c._id === id)
       }
     },
     getPostsByCid(state) {
-      return (cid: number) => {
-        return state.posts.filter(p => p.columnId === cid)
+      return (cid: string) => {
+        return state.posts.filter(p => p.column === cid)
       }
     }
   }
