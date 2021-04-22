@@ -1,6 +1,7 @@
 export interface UserProps {
   isLogin: boolean
-  name?: string
-  id?: string
-  columnId?: string
+  nickName?: string
+  _id?: string
+  column?: string
+  email?:string
 }

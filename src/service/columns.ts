@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { Commit } from 'vuex'
 import { get } from './base'
 
@@ -20,4 +21,15 @@ export const getAndCommit = async (
 ) => {
   const { data } = await get(url)
   commit(mutationName, data)
+}
+
+export const postAndCommit = async (
+  url: string,
+  mutationName: string,
+  commit: Commit,
+  payload: any
+) => {
+  const { data } = await axios.post(url, payload)
+  commit(mutationName, data)
+  return data
 }

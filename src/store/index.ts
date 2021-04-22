@@ -2,11 +2,13 @@ import {
   getAndCommit,
   getColumn,
   getColumns,
-  getPosts
+  getPosts,
+  postAndCommit
 } from '@/service/columns'
 import { IPostProps } from '@/types/column-detail'
 import { ColumnProps } from '@/types/column-list'
 import { UserProps } from '@/types/global-header'
+import axios from 'axios'
 import { Commit, createStore } from 'vuex'
 
 // const store = createStore({
@@ -30,6 +32,7 @@ export interface GlobalDataProps {
   posts: IPostProps[]
   user: UserProps
   loading: boolean
+  token: string
 }
 // 请注意下面这个GlobalDataProps
 // 这个东西需要多次使用
@@ -41,11 +44,10 @@ const store = createStore<GlobalDataProps>({
     columns: [],
     posts: [],
     user: {
-      isLogin: true,
-      name: 'me',
-      columnId: '1'
+      isLogin: false
     },
-    loading: false
+    loading: false,
+    token: ''
   },
   actions: {
     fetchColumns(context) {
@@ -59,16 +61,33 @@ const store = createStore<GlobalDataProps>({
       getPosts(cid).then(res => {
         commit('fetchPosts', res.data)
       })
+    },
+    login({ commit }, payload) {
+      return postAndCommit('user/login', 'login', commit, payload)
+    },
+    fetchCurrentUser({ commit }) {
+      getAndCommit('user/current', 'fetchCurrentUser', commit)
+    },
+    // 下面的例子展示的是如何在一个action里面使用另一个action
+    // 就是组合action 和promise有点类似
+    loginAndFetch({ dispatch, commit }, loginData) {
+      return dispatch('login', loginData).then(res => {
+        return dispatch('fetchCurrentUser')
+      })
     }
   },
   mutations: {
     // 在mutations里面的函数可以获取到state里面的数据(第一个参数就是state)
-    login(state) {
-      state.user = {
-        ...state.user,
-        isLogin: false,
-        name: 'viking'
-      }
+    login(state, rawData) {
+      // state.user = {
+      //   ...state.user,
+      //   isLogin: false,
+      //   name: 'viking'
+      // }
+      const { token } = rawData.data
+      localStorage.setItem('token', token)
+      state.token = token
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`
     },
     setLoading(state, status: boolean) {
       state.loading = status
@@ -84,6 +103,13 @@ const store = createStore<GlobalDataProps>({
     },
     fetchColumn(state, rawData) {
       state.columns = [rawData.data]
+    },
+    fetchCurrentUser(state, rawData) {
+      console.log(rawData)
+      state.user = {
+        isLogin: true,
+        ...rawData.data
+      }
     }
   },
   getters: {

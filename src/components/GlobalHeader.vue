@@ -28,7 +28,7 @@
             >
           </li>
         </ul> -->
-        <Dropdown :title="`你好 ${user.name}`">
+        <Dropdown :title="`你好 ${user.nickName}`">
           <dropdown-item>
             <router-link
               class="dropdown-item text-truncate"

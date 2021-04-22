@@ -30,6 +30,7 @@ export const Validation: ValidationType = {
     return !!str.trim()
   },
   password(str: string) {
-    return isValidPassword(str)
+    return true
+    // return isValidPassword(str)
   }
 }

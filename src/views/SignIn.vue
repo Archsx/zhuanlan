@@ -84,9 +84,17 @@ export default defineComponent({
         // 需要注意的是 只有state里面的数据有代码提示
         // 而这些comit的事件名是没有提示的
         // 不知道哪个版本的vuex能添加支持
-        store.commit('login')
-        router.push({
-          name: 'Index'
+        const payload = {
+          email: email.value,
+          password: password.value
+        }
+        // 注意 下面的这个例子演示了如何在组件中使用某个action的结果
+        // 而相应的action里面需要return结果 否则then里面就拿不到响应的数据
+        store.dispatch('loginAndFetch', payload).then(data => {
+          console.log(data)
+          router.push({
+            name: 'Index'
+          })
         })
       }
     }
