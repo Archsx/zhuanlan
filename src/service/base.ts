@@ -3,6 +3,7 @@ import axios, { AxiosRequestConfig } from 'axios'
 axios.defaults.baseURL = 'http://apis.imooc.com/api/'
 axios.interceptors.request.use(config => {
   store.commit('setLoading', true)
+  store.commit('setError', { status: false, message: '' })
   // get 请求，添加到 url 中
   config.params = { ...config.params, icode: '6461F2CAC3BD6261' }
   // 其他请求，添加到 body 中
@@ -17,10 +18,18 @@ axios.interceptors.request.use(config => {
   return config
 })
 
-axios.interceptors.response.use(config => {
-  store.commit('setLoading', false)
-  return config
-})
+axios.interceptors.response.use(
+  config => {
+    store.commit('setLoading', false)
+    return config
+  },
+  err => {
+    const { error } = err.response.data
+    store.commit('setError', { status: true, message: error })
+    store.commit('setLoading', false)
+    return Promise.reject(error)
+  }
+)
 
 export function get(url: string, params?: AxiosRequestConfig) {
   return axios

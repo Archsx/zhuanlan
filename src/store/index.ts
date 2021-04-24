@@ -27,7 +27,13 @@ import { Commit, createStore } from 'vuex'
 // store.commit('add')
 // console.log('store', store.state.count)
 
+export interface GlobalErrorProps {
+  status: boolean
+  message?: string
+}
+
 export interface GlobalDataProps {
+  error: GlobalErrorProps
   columns: ColumnProps[]
   posts: IPostProps[]
   user: UserProps
@@ -47,7 +53,10 @@ const store = createStore<GlobalDataProps>({
       isLogin: false
     },
     loading: false,
-    token: ''
+    token: localStorage.getItem('token') || '',
+    error: {
+      status: false
+    }
   },
   actions: {
     fetchColumns(context) {
@@ -105,11 +114,13 @@ const store = createStore<GlobalDataProps>({
       state.columns = [rawData.data]
     },
     fetchCurrentUser(state, rawData) {
-      console.log(rawData)
       state.user = {
         isLogin: true,
         ...rawData.data
       }
+    },
+    setError(state, e: GlobalErrorProps) {
+      state.error = e
     }
   },
   getters: {

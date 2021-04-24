@@ -35,13 +35,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, reactive, ref } from 'vue'
 import ValidateInput from '@/components/ValidateInput.vue'
 import ValidateForm from '@/components/ValidateForm.vue'
 import { RuleProps } from '@/utils/validate'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { GlobalDataProps } from '@/store'
+import { GlobalDataProps, GlobalErrorProps } from '@/store'
+import { createMessage } from '@/utils/createMessage'
 
 export default defineComponent({
   name: 'SignIn',
@@ -90,12 +91,19 @@ export default defineComponent({
         }
         // 注意 下面的这个例子演示了如何在组件中使用某个action的结果
         // 而相应的action里面需要return结果 否则then里面就拿不到响应的数据
-        store.dispatch('loginAndFetch', payload).then(data => {
-          console.log(data)
-          router.push({
-            name: 'Index'
+        store
+          .dispatch('loginAndFetch', payload)
+          .then(data => {
+            createMessage('登录成功 2秒后跳转首页', 'success')
+            setTimeout(() => {
+              router.push({
+                name: 'Index'
+              })
+            }, 2000)
           })
-        })
+          .catch(err => {
+            console.log(err)
+          })
       }
     }
     return {

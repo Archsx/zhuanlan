@@ -5,11 +5,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { useStore } from 'vuex'
+import { computed, defineComponent, watch } from 'vue'
+import { GlobalDataProps } from './store'
+import { createMessage } from './utils/createMessage'
 export default defineComponent({
   name: '',
   components: {},
   setup() {
+    const store = useStore<GlobalDataProps>()
+    const error = computed(() => {
+      return store.state.error
+    })
+    watch(
+      () => error.value,
+      newVal => {
+        if (newVal) {
+          createMessage(error.value.message!, 'error')
+        }
+      }
+    )
     return {}
   }
 })

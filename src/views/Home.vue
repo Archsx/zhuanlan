@@ -8,12 +8,13 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue'
+import { computed, defineComponent, onMounted } from 'vue'
 import GlobalHeader from '@/components/GlobalHeader.vue'
 import GlobalFooter from '@/components/GlobalFooter.vue'
 import Loader from '@/components/Loader.vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
+import axios from 'axios'
 
 export default defineComponent({
   name: 'Home',
@@ -22,9 +23,21 @@ export default defineComponent({
     const store = useStore<GlobalDataProps>()
     const user = computed(() => store.state.user)
     const isLoading = computed(() => store.state.loading)
+    const token = computed(() => store.state.token)
+    const error = computed(() => store.state.error)
+    onMounted(() => {
+      // 说明用户登录过
+      if (!user.value.isLogin && token.value) {
+        // 此时根据token去获取用户的信息
+        // 假如token过期，那么在localStorage里面清除相应的存储
+        axios.defaults.headers.common.Authorization = `Bearer ${token.value}`
+        store.dispatch('fetchCurrentUser')
+      }
+    })
     return {
       user,
-      isLoading
+      isLoading,
+      error
     }
   }
 })
