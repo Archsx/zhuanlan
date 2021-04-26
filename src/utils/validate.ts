@@ -13,10 +13,21 @@ function isValidPassword(password: string): boolean {
 
 type Rules = 'required' | 'email' | 'password'
 
-interface RuleProp {
-  type: Rules
-  message: string
-}
+// interface RuleProp {
+//   type: Rules
+//   message: string
+//   custom?: (...args: any[]) => boolean
+// }
+type RuleProp =
+  | {
+      type: Rules
+      message: string
+    }
+  | {
+      type: 'custom'
+      message: string
+      custom: (...args: any[]) => boolean
+    }
 
 export type RuleProps = Array<RuleProp>
 

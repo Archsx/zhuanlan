@@ -54,7 +54,13 @@ export default defineComponent({
         const len = props.rules.length
         for (let i = 0; i < len; i++) {
           const rule = props.rules[i]
-          if (!Validation[rule.type](inputRef.val)) {
+          if (rule.type === 'custom') {
+            if (!rule.custom()) {
+              inputRef.error = true
+              inputRef.message = rule.message
+              return false
+            }
+          } else if (!Validation[rule.type](inputRef.val)) {
             inputRef.error = true
             inputRef.message = rule.message
             return false
@@ -82,6 +88,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.form-control {
+  font-size: 14px !important;
+}
 .validate-input-container {
   position: relative;
   .invalid-feedback {

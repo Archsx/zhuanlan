@@ -18,7 +18,7 @@ export default defineComponent({
       return store.state.error
     })
     watch(
-      () => error.value,
+      () => error.value.status,
       newVal => {
         if (newVal) {
           createMessage(error.value.message!, 'error')

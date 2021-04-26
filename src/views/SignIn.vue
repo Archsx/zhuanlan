@@ -2,29 +2,18 @@
   <div class="signPage">
     <div class="signContent">
       <div class="signFormWrapper">
-        <validate-form @form-submit="onFormSubmit">
-          <div class="mb-2">
-            <label for="exampleInputEmail" class="form-label">邮箱地址</label>
-            <validate-input
-              type="text"
-              placeholder="请输入邮箱地址"
-              :rules="emailRule"
-              v-model="email"
-            ></validate-input>
-          </div>
-          <div class="mb-2">
-            <label for="exampleInputPassword" class="form-label">密码</label>
-            <validate-input
-              :rules="passwordRule"
-              v-model="password"
-              placeholder="请输入密码"
-              type="password"
-            ></validate-input>
-          </div>
-          <template v-slot:submit>
-            <span class="btn btn-danger">Submit</span>
-          </template>
-        </validate-form>
+        <div class="tabs">
+          <span
+            v-for="(tab, index) in tabs"
+            :key="index"
+            :class="{ active: tab.name === activeTabName }"
+            @click="changeActiveTab(tab.name)"
+            class="tab"
+          >
+            {{ tab.des }}
+          </span>
+        </div>
+        <component :is="activeTabName" class="custom-form"></component>
       </div>
     </div>
     <div class="signFooter">
@@ -35,83 +24,37 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
-import ValidateInput from '@/components/ValidateInput.vue'
-import ValidateForm from '@/components/ValidateForm.vue'
-import { RuleProps } from '@/utils/validate'
-import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
-import { GlobalDataProps, GlobalErrorProps } from '@/store'
-import { createMessage } from '@/utils/createMessage'
+import { computed, defineComponent, ref } from '@vue/runtime-core'
+import Login from '@/components/Login.vue'
+import Signup from '@/components/Signup.vue'
 
 export default defineComponent({
-  name: 'SignIn',
+  name: 'signin',
   components: {
-    ValidateInput,
-    ValidateForm
+    Login,
+    Signup
   },
   setup() {
-    const router = useRouter()
-    const emailRule: RuleProps = [
+    const tabs = [
       {
-        type: 'required',
-        message: '邮箱地址不能为空'
+        name: 'login',
+        des: '登录',
+        idx: 0
       },
       {
-        type: 'email',
-        message: '请输入合法的邮箱地址'
+        name: 'signup',
+        des: '注册',
+        idx: 1
       }
     ]
-    const passwordRule: RuleProps = [
-      {
-        type: 'required',
-        message: '密码不能为空'
-      },
-      {
-        type: 'password',
-        message: '请输入长度至少为8位并且包含数字和字母的密码'
-      }
-    ]
-    const email = ref('')
-    const password = ref('')
-    const store = useStore<GlobalDataProps>()
-    // 可以使用ref的形式获取组件实例
-    // const inputRef = ref<any>()
-    // console.log(inputRef.value)
-    // console.log(inputRef.value.validateInput())
-    const onFormSubmit = (result: boolean) => {
-      if (result) {
-        // 使用store.commit来调用mutations里面的方法
-        // 需要注意的是 只有state里面的数据有代码提示
-        // 而这些comit的事件名是没有提示的
-        // 不知道哪个版本的vuex能添加支持
-        const payload = {
-          email: email.value,
-          password: password.value
-        }
-        // 注意 下面的这个例子演示了如何在组件中使用某个action的结果
-        // 而相应的action里面需要return结果 否则then里面就拿不到响应的数据
-        store
-          .dispatch('loginAndFetch', payload)
-          .then(data => {
-            createMessage('登录成功 2秒后跳转首页', 'success')
-            setTimeout(() => {
-              router.push({
-                name: 'Index'
-              })
-            }, 2000)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
+    const activeTabName = ref('login')
+    const changeActiveTab = (name: string) => {
+      activeTabName.value = name
     }
     return {
-      emailRule,
-      passwordRule,
-      email,
-      password,
-      onFormSubmit
+      tabs,
+      activeTabName,
+      changeActiveTab
     }
   }
 })
@@ -139,6 +82,34 @@ export default defineComponent({
       border-radius: 2px;
       overflow: hidden;
       padding: 24px;
+      .custom-form {
+        font-size: 14px;
+      }
+      .tabs {
+        margin-bottom: 24px;
+        .tab {
+          font-size: 16px;
+          display: inline-block;
+          line-height: 60px;
+          height: 60px;
+          margin-right: 24px;
+          cursor: pointer;
+          position: relative;
+          &.active {
+            font-weight: 600;
+            color: #121212;
+            &:after {
+              display: block;
+              position: absolute;
+              bottom: 0;
+              content: '';
+              width: 100%;
+              height: 3px;
+              background: #06f;
+            }
+          }
+        }
+      }
     }
   }
   .signFooter {
