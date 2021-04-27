@@ -49,6 +49,8 @@ import { defineComponent, ref } from 'vue'
 import ValidateForm from '@/components/ValidateForm.vue'
 import ValidateInput from '@/components/ValidateInput.vue'
 import { RuleProps } from '@/utils/validate'
+import { post } from '@/service/base'
+import { createMessage } from '@/utils/createMessage'
 
 export default defineComponent({
   name: 'signup',
@@ -100,6 +102,12 @@ export default defineComponent({
           nickName: nickName.value,
           password: password.value
         }
+        post('users', payload).then(res => {
+          createMessage('注册成功,请登录', 'default')
+          setTimeout(() => {
+            window.location.reload()
+          }, 1000)
+        })
       }
     }
 
