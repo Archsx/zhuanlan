@@ -1,5 +1,10 @@
 <template>
   <div class="create-post-page">
+    <uploader :action="'upload'">
+      <template v-slot:uploaded="dataProps">
+        <img :src="dataProps.uploadedData.data.url" alt="" width="500"/>
+      </template>
+    </uploader>
     <h4>新建文章</h4>
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
@@ -39,10 +44,16 @@ import { useStore } from 'vuex'
 import store, { GlobalDataProps } from '@/store'
 import { RuleProps } from '@/utils/validate'
 import { IPostProps } from '@/types/column-detail'
+import Uploader from '@/components/Uploader.vue'
+
+
+
+
+
 
 export default defineComponent({
   name: 'CreatePost',
-  components: { ValidateInput, ValidateForm },
+  components: { ValidateInput, ValidateForm, Uploader },
   setup(props) {
     const titleVal = ref('')
     const contentVal = ref('')
@@ -64,18 +75,19 @@ export default defineComponent({
       if (result) {
         const { column } = store.state.user
         if (column) {
-          const newPost: IPostProps = {
-            _id: new Date().getTime() + '',
+          const newPost: Partial<IPostProps> = {
+            // _id: new Date().getTime() + '',
             title: titleVal.value,
             content: contentVal.value,
-            column,
-            createdAt: new Date().toLocaleString()
+            column
+            // createdAt: new Date().toLocaleString()
           }
           store.commit('createPost', newPost)
           router.push({ name: 'ColumnDetail', params: { id: column } })
         }
       }
     }
+
     return {
       titleVal,
       contentVal,

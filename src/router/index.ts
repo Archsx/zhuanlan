@@ -42,6 +42,10 @@ const routes: Array<RouteRecordRaw> = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "signin" */ '../views/SignIn.vue')
+  },
+  {
+    path: '/upload',
+    component: () => import('@/components/Uploader.vue')
   }
 ]
 
