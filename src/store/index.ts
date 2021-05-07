@@ -75,7 +75,7 @@ const store = createStore<GlobalDataProps>({
       return postAndCommit('user/login', 'login', commit, payload)
     },
     fetchCurrentUser({ commit }) {
-      getAndCommit('user/current', 'fetchCurrentUser', commit)
+      return getAndCommit('user/current', 'fetchCurrentUser', commit)
     },
     // 下面的例子展示的是如何在一个action里面使用另一个action
     // 就是组合action 和promise有点类似

@@ -2,7 +2,7 @@
   <div class="create-post-page">
     <uploader :action="'upload'">
       <template v-slot:uploaded="dataProps">
-        <img :src="dataProps.uploadedData.data.url" alt="" width="500"/>
+        <img :src="dataProps.uploadedData.data.url" alt="" width="500" />
       </template>
     </uploader>
     <h4>新建文章</h4>
@@ -45,11 +45,6 @@ import store, { GlobalDataProps } from '@/store'
 import { RuleProps } from '@/utils/validate'
 import { IPostProps } from '@/types/column-detail'
 import Uploader from '@/components/Uploader.vue'
-
-
-
-
-
 
 export default defineComponent({
   name: 'CreatePost',

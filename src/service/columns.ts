@@ -21,6 +21,7 @@ export const getAndCommit = async (
 ) => {
   const { data } = await get(url)
   commit(mutationName, data)
+  return data
 }
 
 export const postAndCommit = async (
