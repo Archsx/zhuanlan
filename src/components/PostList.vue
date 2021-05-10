@@ -1,11 +1,17 @@
 <template>
   <div class="post-list">
     <article v-for="post in list" :key="post._id" class="card mb-3 shadow-sm">
-      <div class="card-body">
+      <div class="card-body" @click="jump(post._id)">
         <h4>{{ post.title }}</h4>
         <div class="row my-3 align-items-center">
           <div v-if="post.image" class="col-3">
-            <img :src="post.image.url" alt="" class="rounded-lg w-100 " />
+            <img
+              :src="
+                typeof post.image === 'string' ? post.image : post.image.url
+              "
+              alt=""
+              class="rounded-lg w-100 "
+            />
           </div>
           <p :class="{ 'col-9': post.image }">
             {{ post.excerpt }}
@@ -19,6 +25,7 @@
 
 <script lang="ts">
 import { IPostProps } from '@/types/column-detail'
+import { useRouter } from 'vue-router'
 import { defineComponent, PropType } from 'vue'
 
 export default defineComponent({
@@ -31,7 +38,18 @@ export default defineComponent({
     }
   },
   setup(props) {
-    return {}
+    const router = useRouter()
+    const jump = (id: string) => {
+      router.push({
+        name: 'postDetail',
+        params: {
+          id
+        }
+      })
+    }
+    return {
+      jump
+    }
   }
 })
 </script>

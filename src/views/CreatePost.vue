@@ -1,11 +1,29 @@
 <template>
   <div class="create-post-page">
-    <uploader :action="'upload'">
+    <h4>新建文章</h4>
+    <uploader
+      action="upload"
+      class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
+      :beforeUpload="uploadCheck"
+      @file-uploaded="handleFileUploaded"
+    >
+      <h2>点击上传图片</h2>
+      <!-- 以下是scopedSlot的例子
       <template v-slot:uploaded="dataProps">
         <img :src="dataProps.uploadedData.data.url" alt="" width="500" />
+      </template> -->
+      <template v-slot:loading>
+        <div class="d-flex align-items-center">
+          <div class="spinner-border text-secondary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <h2 class="mb-0">正在上传</h2>
+        </div>
+      </template>
+      <template #uploaded="dataProps">
+        <img :src="dataProps.uploadedData.data.url" alt="" />
       </template>
     </uploader>
-    <h4>新建文章</h4>
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label for="" class="form-label">文章标题: </label>
@@ -45,6 +63,10 @@ import store, { GlobalDataProps } from '@/store'
 import { RuleProps } from '@/utils/validate'
 import { IPostProps } from '@/types/column-detail'
 import Uploader from '@/components/Uploader.vue'
+import { beforeUploadCheck } from '@/utils/helper'
+import { createMessage } from '@/utils/createMessage'
+import { IResponseType } from '@/types/response-type'
+import { ImageProps } from '@/types/column-list'
 
 export default defineComponent({
   name: 'CreatePost',
@@ -53,6 +75,13 @@ export default defineComponent({
     const titleVal = ref('')
     const contentVal = ref('')
     const router = useRouter()
+
+    let imageId = ''
+    const handleFileUploaded = (rawData: IResponseType<ImageProps>) => {
+      if (rawData.data._id) {
+        imageId = rawData.data._id
+      }
+    }
     // const store = useStore<GlobalDataProps>()
     const titleRules: RuleProps = [
       {
@@ -68,30 +97,64 @@ export default defineComponent({
     ]
     const onFormSubmit = (result: boolean) => {
       if (result) {
-        const { column } = store.state.user
+        const { column, _id } = store.state.user
         if (column) {
           const newPost: Partial<IPostProps> = {
             // _id: new Date().getTime() + '',
             title: titleVal.value,
             content: contentVal.value,
-            column
+            column,
+            author: _id
             // createdAt: new Date().toLocaleString()
           }
-          store.commit('createPost', newPost)
-          router.push({ name: 'ColumnDetail', params: { id: column } })
+          if (imageId) {
+            newPost.image = imageId
+          }
+          store.dispatch('createPost', newPost).then(() => {
+            createMessage('发表成功,两秒后跳转到文章', 'success', 2000)
+            setTimeout(() => {
+              router.push({ name: 'ColumnDetail', params: { id: column } })
+            }, 2000)
+          })
         }
       }
     }
 
+    const uploadCheck = (file: File) => {
+      const result = beforeUploadCheck(file, {
+        size: 5,
+        format: ['image/png', 'image/jpg']
+      })
+      const { passed, error } = result
+      if (error === 'format') {
+        createMessage('请选择正确格式的图片', 'error')
+      }
+      if (error === 'size') {
+        createMessage('图片的大小不得大于5M', 'error')
+      }
+      return passed
+    }
     return {
       titleVal,
       contentVal,
       titleRules,
       contentRules,
-      onFormSubmit
+      onFormSubmit,
+      uploadCheck,
+      handleFileUploaded
     }
   }
 })
 </script>
 
-<style lang="" scoped></style>
+<style lang="scss" scoped>
+.create-post-page .file-upload-container {
+  height: 200px;
+  cursor: pointer;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+</style>

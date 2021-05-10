@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
 import Columns from '@/components/Columns.vue'
 import ColumnDetail from '@/components/ColumnDetail.vue'
+import PostDetail from '@/components/PostDetail.vue'
 import store from '@/store'
 import { computed } from '@vue/runtime-core'
 import axios from 'axios'
@@ -21,6 +22,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'columnDetail/:id',
         component: ColumnDetail,
         name: 'ColumnDetail'
+      },
+      {
+        path: 'p/:id',
+        component: PostDetail,
+        name: 'postDetail'
       },
       {
         path: 'create',
@@ -91,7 +97,7 @@ router.beforeEach((to, from, next) => {
         .catch(err => {
           // 有token 但是还是有错误，说明token已经不好用了 比如过期了 此时应该删除
           console.log(err)
-          localStorage.removeItem('token')
+          store.commit('logout')
           next({
             name: 'SignIn'
           })

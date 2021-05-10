@@ -83,6 +83,9 @@ const store = createStore<GlobalDataProps>({
       return dispatch('login', loginData).then(res => {
         return dispatch('fetchCurrentUser')
       })
+    },
+    createPost({ commit }, payload) {
+      return postAndCommit('posts', 'createPost', commit, payload)
     }
   },
   mutations: {
@@ -121,6 +124,11 @@ const store = createStore<GlobalDataProps>({
     },
     setError(state, e: GlobalErrorProps) {
       state.error = e
+    },
+    logout(state) {
+      state.token = ''
+      localStorage.removeItem('token')
+      delete axios.defaults.headers.common.Authorization
     }
   },
   getters: {

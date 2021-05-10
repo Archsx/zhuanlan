@@ -1,6 +1,10 @@
 <template>
   <div class="file-upload">
-    <div class="file-upload-container " @click.prevent="triggerUpload">
+    <div
+      class="file-upload-container "
+      @click.prevent="triggerUpload"
+      v-bind="$attrs"
+    >
       <slot v-if="fileStatus === 'loading'" name="loading">
         <button class="btn btn-primary">正在上传...</button>
       </slot>
@@ -37,9 +41,6 @@
 //   createMessage(`上传图片ID ${rawData.data._id}`, 'success')
 // }
 
-import { ImageProps } from '@/types/column-list'
-import { IResponseType } from '@/types/response-type'
-import { createMessage } from '@/utils/createMessage'
 import axios from 'axios'
 import { defineComponent, PropType, ref } from 'vue'
 type UploadStatus = 'ready' | 'loading' | 'success' | 'error'
@@ -54,6 +55,7 @@ type CheckFunction = (file: File) => boolean
 export default defineComponent({
   name: 'uploader',
   components: {},
+  inheritAttrs: false,
   emits: ['file-uploaded', 'file-uploaded-error'],
   props: {
     action: {
@@ -124,4 +126,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="" scoped></style>
+<style lang="scss" scoped></style>
