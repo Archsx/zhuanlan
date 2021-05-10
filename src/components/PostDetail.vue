@@ -25,14 +25,14 @@
 </template>
 
 <script lang="ts">
-import { IPostProps } from '@/types/column-detail'
 import { useRoute } from 'vue-router'
 import { computed, defineComponent, popScopeId, reactive, ref } from 'vue'
 import axios from 'axios'
-import { IResponseType } from '@/types/response-type'
 import { IPostDetail } from '@/types/post-detail'
 import { addColumnAvatar, generateFitUrl } from '@/utils/helper'
 import MarkdownIt from 'markdown-it'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '@/store'
 
 export default defineComponent({
   name: 'PostDetail',
@@ -42,18 +42,21 @@ export default defineComponent({
     const route = useRoute()
     const postId = route.params.id
     const md = new MarkdownIt()
-    const getPostDetail = computed(() => {
-      return !!Object.keys(postDetail.value).length
-    })
-    axios.get(`posts/${postId}`).then(res => {
+    const store = useStore<GlobalDataProps>()
+    store.dispatch('fetchPost', postId).then(res => {
       const { data } = res
-      postDetail.value = data.data as IPostDetail
+      postDetail.value = data as IPostDetail
       generateFitUrl(postDetail.value.image, 690, 400)
       addColumnAvatar(postDetail.value.author, 38, 38)
       if (!postDetail.value.isHTML) {
         postDetail.value.content = md.render(postDetail.value.content)
       }
     })
+
+    const getPostDetail = computed(() => {
+      return !!Object.keys(postDetail.value).length
+    })
+    // axios.get(`posts/${postId}`).then(res => {})
 
     return {
       postDetail,

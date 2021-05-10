@@ -1,3 +1,4 @@
+import { get } from '@/service/base'
 import {
   getAndCommit,
   getColumn,
@@ -39,6 +40,7 @@ export interface GlobalDataProps {
   user: UserProps
   loading: boolean
   token: string
+  toBeEditedPost: IPostProps | null
 }
 // 请注意下面这个GlobalDataProps
 // 这个东西需要多次使用
@@ -56,9 +58,14 @@ const store = createStore<GlobalDataProps>({
     token: localStorage.getItem('token') || '',
     error: {
       status: false
-    }
+    },
+    toBeEditedPost: null
   },
   actions: {
+    async fetchPost(context, cid: string) {
+      const { data } = await get(`posts/${cid}`)
+      return data
+    },
     fetchColumns(context) {
       getAndCommit('/columns', 'fetchColumns', context.commit)
     },
@@ -129,6 +136,9 @@ const store = createStore<GlobalDataProps>({
       state.token = ''
       localStorage.removeItem('token')
       delete axios.defaults.headers.common.Authorization
+    },
+    setToBeEditedPost(state, payload) {
+      state.toBeEditedPost = payload
     }
   },
   getters: {
