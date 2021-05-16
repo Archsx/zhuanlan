@@ -42,7 +42,7 @@
 // }
 
 import axios from 'axios'
-import { defineComponent, PropType, ref } from 'vue'
+import { defineComponent, PropType, ref, watch } from 'vue'
 type UploadStatus = 'ready' | 'loading' | 'success' | 'error'
 type CheckFunction = (file: File) => boolean
 
@@ -64,12 +64,24 @@ export default defineComponent({
     },
     beforeUpload: {
       type: Function as PropType<CheckFunction>
+    },
+    uploaded: {
+      type: Object
     }
   },
   setup(props, { emit }) {
     const fileInput = ref<HTMLInputElement | null>(null)
-    const fileStatus = ref<UploadStatus>('ready')
-    const uploadedData = ref()
+    const fileStatus = ref<UploadStatus>(props.uploaded ? 'success' : 'ready')
+    const uploadedData = ref(props.uploaded)
+    watch(
+      () => props.uploaded,
+      newVal => {
+        if (newVal) {
+          fileStatus.value = 'success'
+          uploadedData.value = newVal
+        }
+      }
+    )
     const triggerUpload = () => {
       if (fileInput.value) {
         fileInput.value.click()

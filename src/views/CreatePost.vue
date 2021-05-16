@@ -6,6 +6,7 @@
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
       :beforeUpload="uploadCheck"
       @file-uploaded="handleFileUploaded"
+      :uploaded="uploadedData"
     >
       <h2>点击上传图片</h2>
       <!-- 以下是scopedSlot的例子
@@ -21,6 +22,7 @@
         </div>
       </template>
       <template #uploaded="dataProps">
+        <!-- <img :src="dataProps.uploadedData.image.fitUrl" alt="" /> -->
         <img :src="dataProps.uploadedData.data.url" alt="" />
       </template>
     </uploader>
@@ -54,10 +56,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import ValidateInput from '@/components/ValidateInput.vue'
 import ValidateForm from '@/components/ValidateForm.vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import store, { GlobalDataProps } from '@/store'
 import { RuleProps } from '@/utils/validate'
@@ -65,8 +67,9 @@ import { IPostProps } from '@/types/column-detail'
 import Uploader from '@/components/Uploader.vue'
 import { beforeUploadCheck } from '@/utils/helper'
 import { createMessage } from '@/utils/createMessage'
-import { IResponseType } from '@/types/response-type'
 import { ImageProps } from '@/types/column-list'
+import { IPostDetail } from '@/types/post-detail'
+import { IResponseType } from '@/types/response-type'
 
 export default defineComponent({
   name: 'CreatePost',
@@ -75,14 +78,17 @@ export default defineComponent({
     const titleVal = ref('')
     const contentVal = ref('')
     const router = useRouter()
-
+    const route = useRoute()
+    const isEditMode = !!route.query.id
+    const store = useStore<GlobalDataProps>()
+    const toBeEditedPost = store.state.toBeEditedPost
     let imageId = ''
+    const uploadedData = ref()
     const handleFileUploaded = (rawData: IResponseType<ImageProps>) => {
       if (rawData.data._id) {
         imageId = rawData.data._id
       }
     }
-    // const store = useStore<GlobalDataProps>()
     const titleRules: RuleProps = [
       {
         type: 'required',
@@ -120,6 +126,31 @@ export default defineComponent({
       }
     }
 
+    onMounted(() => {
+      if (isEditMode) {
+        // titleVal.value = toBeEditedPost!.title
+        // contentVal.value = toBeEditedPost!.content!
+        // imageId = toBeEditedPost!.image.url!
+        // uploadedData = {
+        //   data: {
+        //     url: imageId
+        //   }
+        // }
+        store
+          .dispatch('fetchPost', route.query.id)
+          .then((rawData: IResponseType<IPostDetail>) => {
+            const currentPost = rawData.data
+            if (currentPost.image) {
+              uploadedData.value = {
+                data: currentPost.image
+              }
+            }
+            titleVal.value = currentPost.title
+            contentVal.value = currentPost.content
+          })
+      }
+    })
+
     const uploadCheck = (file: File) => {
       const result = beforeUploadCheck(file, {
         size: 5,
@@ -141,7 +172,9 @@ export default defineComponent({
       contentRules,
       onFormSubmit,
       uploadCheck,
-      handleFileUploaded
+      handleFileUploaded,
+      toBeEditedPost,
+      uploadedData
     }
   }
 })

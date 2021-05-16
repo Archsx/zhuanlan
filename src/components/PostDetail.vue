@@ -21,13 +21,18 @@
       </header>
       <div class="post-content" v-html="postDetail.content"></div>
     </article>
+    <div v-if="showEditArea" class="btn-group mt-5">
+      <button @click="editPost" class="btn btn-primary">
+        编辑
+      </button>
+      <button class="btn btn-danger">删除</button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { useRoute } from 'vue-router'
-import { computed, defineComponent, popScopeId, reactive, ref } from 'vue'
-import axios from 'axios'
+import { useRoute, useRouter } from 'vue-router'
+import { computed, defineComponent, ref } from 'vue'
 import { IPostDetail } from '@/types/post-detail'
 import { addColumnAvatar, generateFitUrl } from '@/utils/helper'
 import MarkdownIt from 'markdown-it'
@@ -37,12 +42,22 @@ import { GlobalDataProps } from '@/store'
 export default defineComponent({
   name: 'PostDetail',
   components: {},
-  setup(props) {
+  setup() {
     const postDetail = ref({} as IPostDetail)
     const route = useRoute()
+    const router = useRouter()
     const postId = route.params.id
     const md = new MarkdownIt()
     const store = useStore<GlobalDataProps>()
+    const showEditArea = computed(() => {
+      // const { isLogin, _id } = store.state.user
+      // if (isLogin && getPostDetail.value) {
+      //   const author = postDetail.value.author
+      //   return author._id === _id
+      // }
+      // return false
+      return true
+    })
     store.dispatch('fetchPost', postId).then(res => {
       const { data } = res
       postDetail.value = data as IPostDetail
@@ -56,11 +71,21 @@ export default defineComponent({
     const getPostDetail = computed(() => {
       return !!Object.keys(postDetail.value).length
     })
-    // axios.get(`posts/${postId}`).then(res => {})
 
+    const editPost = () => {
+      store.commit('setToBeEditedPost', postDetail.value)
+      router.push({
+        name: 'CreatePost',
+        query: {
+          id: postDetail.value._id
+        }
+      })
+    }
     return {
       postDetail,
-      getPostDetail
+      getPostDetail,
+      showEditArea,
+      editPost
     }
   }
 })

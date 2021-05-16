@@ -2,15 +2,15 @@ import { get } from '@/service/base'
 import {
   getAndCommit,
   getColumn,
-  getColumns,
   getPosts,
   postAndCommit
 } from '@/service/columns'
 import { IPostProps } from '@/types/column-detail'
 import { ColumnProps } from '@/types/column-list'
 import { UserProps } from '@/types/global-header'
+import { IPostDetail } from '@/types/post-detail'
 import axios from 'axios'
-import { Commit, createStore } from 'vuex'
+import { createStore } from 'vuex'
 
 // const store = createStore({
 //   state: {
@@ -40,7 +40,7 @@ export interface GlobalDataProps {
   user: UserProps
   loading: boolean
   token: string
-  toBeEditedPost: IPostProps | null
+  toBeEditedPost: IPostDetail | null
 }
 // 请注意下面这个GlobalDataProps
 // 这个东西需要多次使用
@@ -86,8 +86,8 @@ const store = createStore<GlobalDataProps>({
     },
     // 下面的例子展示的是如何在一个action里面使用另一个action
     // 就是组合action 和promise有点类似
-    loginAndFetch({ dispatch, commit }, loginData) {
-      return dispatch('login', loginData).then(res => {
+    loginAndFetch({ dispatch }, loginData) {
+      return dispatch('login', loginData).then(() => {
         return dispatch('fetchCurrentUser')
       })
     },

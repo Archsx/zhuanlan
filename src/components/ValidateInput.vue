@@ -1,9 +1,9 @@
 <template>
   <div class="validate-input-container pb-3">
     <component
-      class="form-control"
       :value="inputRef.val"
       @input="handleInput"
+      class="form-control"
       @blur="validateInput"
       :class="{ 'is-invalid': inputRef.error }"
       v-bind="$attrs"
@@ -17,7 +17,14 @@
 
 <script lang="ts">
 import { RuleProps, Validation } from '@/utils/validate'
-import { defineComponent, onMounted, PropType, reactive } from 'vue'
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  PropType,
+  reactive,
+  watch
+} from 'vue'
 import { mitter } from './ValidateForm.vue'
 export type InputOrText = 'input' | 'textarea'
 
@@ -44,8 +51,22 @@ export default defineComponent({
   },
   emits: ['update:modelValue'],
   setup(props, { emit, attrs }) {
+    // watch(
+    //   () => props.modelValue,
+    //   val => {
+    //     console.log('--------', val)
+    //   }
+    // )
     const inputRef = reactive({
-      val: props.modelValue || '',
+      // val: props.modelValue || '',
+      val: computed({
+        get: () => {
+          return props.modelValue || ''
+        },
+        set: val => {
+          emit('update:modelValue', val)
+        }
+      }),
       error: false,
       message: ''
     })
@@ -73,7 +94,7 @@ export default defineComponent({
     }
     const handleInput = (e: InputEvent) => {
       inputRef.val = (e.target as HTMLInputElement).value
-      emit('update:modelValue', inputRef.val)
+      // emit('update:modelValue', inputRef.val)
     }
     onMounted(() => {
       mitter.emit('form-item-created', validateInput)
