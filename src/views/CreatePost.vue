@@ -1,6 +1,6 @@
 <template>
   <div class="create-post-page">
-    <h4>新建文章</h4>
+    <h4>{{ isEditMode ? '编辑文章' : '新建文章' }}</h4>
     <uploader
       action="upload"
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
@@ -49,7 +49,9 @@
         </validate-input>
       </div>
       <template v-slot:submit>
-        <button class="btn btn-primary btn-large">创建</button>
+        <button class="btn btn-primary btn-large">
+          {{ isEditMode ? '修改' : '新建' }}
+        </button>
       </template>
     </validate-form>
   </div>
@@ -116,8 +118,12 @@ export default defineComponent({
           if (imageId) {
             newPost.image = imageId
           }
-          store.dispatch('createPost', newPost).then(() => {
-            createMessage('发表成功,两秒后跳转到文章', 'success', 2000)
+          const actionName = isEditMode ? 'updatePost' : 'createPost'
+          const sendData = isEditMode
+            ? { id: route.query.id, payload: newPost }
+            : newPost
+          store.dispatch(actionName, sendData).then(() => {
+            createMessage('操作成功,两秒后跳转到文章', 'success', 2000)
             setTimeout(() => {
               router.push({ name: 'ColumnDetail', params: { id: column } })
             }, 2000)
@@ -174,7 +180,8 @@ export default defineComponent({
       uploadCheck,
       handleFileUploaded,
       toBeEditedPost,
-      uploadedData
+      uploadedData,
+      isEditMode
     }
   }
 })
