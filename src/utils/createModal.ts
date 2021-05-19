@@ -1,5 +1,5 @@
 import { IModalProps } from '@/types/modal-props'
-import { createApp, createVNode, render } from '@vue/runtime-dom'
+import { createApp, createVNode, render, Transition } from '@vue/runtime-dom'
 // import Modal from '@/components/Modal'
 import Modal from '@/components/Modal.vue'
 
@@ -22,6 +22,29 @@ export const createModal = (config: IModalProps) => {
       render(null, container)
     }
   })
+  render(vnode, container)
+  document.body.appendChild(container.firstElementChild!)
+}
+
+export const createTransModal = (config: IModalProps) => {
+  const container = document.createElement('div')
+  const vnode = createVNode(
+    Transition,
+    {
+      name: 'modal-fade',
+      appear: true
+    },
+    {
+      default: () => {
+        return createVNode(Modal, {
+          ...config,
+          onDestroy: () => {
+            render(null, container)
+          }
+        })
+      }
+    }
+  )
   render(vnode, container)
   document.body.appendChild(container.firstElementChild!)
 }

@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import { createModal } from '@/utils/createModal'
+import { createModal, createTransModal } from '@/utils/createModal'
 import { createVNode, defineComponent } from 'vue'
 
 export default defineComponent({
@@ -11,7 +11,8 @@ export default defineComponent({
   components: {},
   setup(props) {
     const handleClick = () => {
-      createModal({
+      createTransModal({
+        // createModal({
         show: true,
         concelText: '取消',
         confirmText: '确定',

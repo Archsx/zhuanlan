@@ -42,14 +42,14 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
 }
-// .modal-fade-enter-active,
-// .modal-fade-leave-active {
-//   transition: opacity 0.5s ease;
-// }
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.5s ease;
+}
 
-// .modal-fade-enter-from,
-// .modal-fade-leave-to {
-//   opacity: 0;
-//   transition: opacity 0.5s ease;
-// }
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+  transition: opacity .5s ease;
+}
 </style>
