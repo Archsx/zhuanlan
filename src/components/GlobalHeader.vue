@@ -37,6 +37,13 @@
             >
           </dropdown-item>
           <dropdown-item>
+            <router-link
+              class="dropdown-item text-truncate"
+              :to="`/columnDetail/${user.column}`"
+              >我的专栏</router-link
+            >
+          </dropdown-item>
+          <dropdown-item>
             <a class="dropdown-item text-truncate" href="#">编辑资料</a>
           </dropdown-item>
           <dropdown-item disabled>

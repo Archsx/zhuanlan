@@ -1,6 +1,6 @@
 import Message from '@/components/Message.vue'
 import { IMessageType } from '@/types/message-type'
-import { createApp } from '@vue/runtime-dom'
+import { createApp, createVNode } from '@vue/runtime-dom'
 
 export const createMessage = (
   message: string,
