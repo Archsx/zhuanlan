@@ -1,5 +1,12 @@
 import { IModalProps } from '@/types/modal-props'
-import { createApp, createVNode, render, Transition } from '@vue/runtime-dom'
+import {
+  createApp,
+  createVNode,
+  mergeProps,
+  nextTick,
+  render,
+  Transition
+} from '@vue/runtime-dom'
 // import Modal from '@/components/Modal'
 import Modal from '@/components/Modal.vue'
 
@@ -36,12 +43,17 @@ export const createTransModal = (config: IModalProps) => {
     },
     {
       default: () => {
-        return createVNode(Modal, {
+        const vn = createVNode(Modal, {
           ...config,
           onDestroy: () => {
-            render(null, container)
+            // vn.component!.props.show = false
+            // vn.props!.show = false
+            nextTick(() => {
+              render(null, container)
+            })
           }
         })
+        return vn
       }
     }
   )

@@ -50,6 +50,9 @@ export default defineComponent({
 .modal-fade-enter-from,
 .modal-fade-leave-to {
   opacity: 0;
-  transition: opacity .5s ease;
+  transition: opacity 0.5s ease;
+}
+.btn-close:focus {
+  box-shadow: none !important;
 }
 </style>

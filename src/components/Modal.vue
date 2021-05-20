@@ -102,13 +102,6 @@ export default defineComponent({
       }
     }
     const listenClick = () => {
-      // const isClickOutside = useClickOutside(modal)
-      // watch(isClickOutside, val => {
-      //   if (val) {
-      //     closeModal()
-      //   }
-      // })
-
       window.addEventListener('click', fn)
     }
     onMounted(() => {
@@ -127,6 +120,7 @@ export default defineComponent({
       closeModal()
     }
     const handleCancel = () => {
+      props.onCancel && props.onCancel()
       closeModal()
     }
     return {
@@ -138,5 +132,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
