@@ -110,17 +110,18 @@ export default defineComponent({
       })
     })
     const closeModal = () => {
-      props.onCancel && props.onCancel()
       showRef.value = false
       window.removeEventListener('click', fn)
       emit('destroy')
     }
     const handleConfirm = () => {
       props.onConfirm && props.onConfirm()
+      console.log(11)
       closeModal()
     }
     const handleCancel = () => {
       props.onCancel && props.onCancel()
+      console.log(22)
       closeModal()
     }
     return {

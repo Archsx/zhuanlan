@@ -25,19 +25,21 @@
       <button @click="editPost" class="btn btn-primary">
         编辑
       </button>
-      <button class="btn btn-danger">删除</button>
+      <button class="btn btn-danger" @click="check">删除</button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { useRoute, useRouter } from 'vue-router'
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref, watch, watchEffect } from 'vue'
 import { IPostDetail } from '@/types/post-detail'
 import { addColumnAvatar, generateFitUrl } from '@/utils/helper'
 import MarkdownIt from 'markdown-it'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '@/store'
+import { createTransModal } from '@/utils/createModal'
+import { createMessage } from '@/utils/createMessage'
 
 export default defineComponent({
   name: 'PostDetail',
@@ -50,13 +52,13 @@ export default defineComponent({
     const md = new MarkdownIt()
     const store = useStore<GlobalDataProps>()
     const showEditArea = computed(() => {
-      // const { isLogin, _id } = store.state.user
-      // if (isLogin && getPostDetail.value) {
-      //   const author = postDetail.value.author
-      //   return author._id === _id
-      // }
-      // return false
-      return true
+      const { isLogin, _id } = store.state.user
+      if (isLogin && getPostDetail.value) {
+        const author = postDetail.value.author
+        return author._id === _id
+      }
+      return false
+      // return true
     })
     store.dispatch('fetchPost', postId).then(res => {
       const { data } = res
@@ -81,11 +83,33 @@ export default defineComponent({
         }
       })
     }
+
+    const check = () => {
+      const res = createTransModal({
+        header: '确认要删除文章吗',
+        content: '此操作不可撤回，请谨慎对待',
+        show: true
+      })
+
+      watch(res, newVal => {
+        if (newVal) {
+          store.dispatch('deletePost', postId).then(res => {
+            const { data } = res
+            createMessage('删除成功,两秒后跳转首页', 'success', 2000)
+            setTimeout(() => {
+              router.push('/')
+            }, 2000)
+          })
+        }
+      })
+    }
+
     return {
       postDetail,
       getPostDetail,
       showEditArea,
-      editPost
+      editPost,
+      check
     }
   }
 })

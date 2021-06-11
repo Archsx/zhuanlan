@@ -108,6 +108,11 @@ const store = createStore<GlobalDataProps>({
         method: 'patch',
         data: payload
       })
+    },
+    deletePost({ commit }, id) {
+      return asyncAndCommit(`/posts/${id}`, 'deletePost', commit, {
+        method: 'delete'
+      })
     }
   },
   mutations: {
@@ -163,6 +168,9 @@ const store = createStore<GlobalDataProps>({
           return post
         }
       })
+    },
+    deletePost(state, { data }) {
+      state.posts = state.posts.filter(post => post._id !== data._id)
     }
   },
   getters: {
